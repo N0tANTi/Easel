@@ -563,6 +563,18 @@ def _needs_phone_binding(page) -> bool:
     return False
 
 
+def _backend_authenticated(page) -> bool:
+    """离开扫码页后重进创作者后台，避免中途跳转被误判为登录成功。"""
+    if not _is_logged_in(page):
+        return False
+    try:
+        page.goto(HOME_URL, wait_until="domcontentloaded", timeout=30000)
+        page.wait_for_timeout(2500)
+    except Exception:
+        return False
+    return _is_logged_in(page)
+
+
 def _capture_qr(page, qr_out: Path) -> bool:
     """把登录二维码截到 qr_out。多选择器逐个试（最多 15s），全不中退回整页截图。"""
     deadline = time.time() + 15
@@ -608,7 +620,7 @@ def _qr_login(profile: Path, qr_out: Path, status_file: Path, timeout_s: int,
             page = ctx.pages[0] if ctx.pages else ctx.new_page()
             page.goto(LOGIN_URL, wait_until="domcontentloaded")
             page.wait_for_timeout(2500)
-            if _is_logged_in(page):
+            if _backend_authenticated(page):
                 login_state.write_status(str(status_file), "success", "已登录")
                 print("✅ 今日头条 已登录（登录态在持久化目录）")
                 return 0
@@ -642,7 +654,7 @@ def _qr_login(profile: Path, qr_out: Path, status_file: Path, timeout_s: int,
                         login_state.write_status(str(status_file), "window_login",
                                                  "扫码已确认；请在弹出的今日头条窗口绑定手机号并输入短信验证码")
                     continue
-                if _is_logged_in(page):
+                if _backend_authenticated(page):
                     login_state.write_status(str(status_file), "success", "登录成功")
                     try:
                         qr_out.unlink()  # 成功后清掉二维码图，避免误扫过期码

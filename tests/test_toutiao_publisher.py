@@ -220,6 +220,26 @@ def test_phone_binding_is_not_a_completed_login():
     assert not tp._is_logged_in(page)
 
 
+def test_backend_confirmation_rejects_intermediate_redirect(monkeypatch):
+    """扫码后的临时跳转不能跳过后台的手机绑定要求。"""
+    class RedirectPage:
+        url = "https://mp.toutiao.com/intermediate"
+        binding = False
+
+        def goto(self, url, **kwargs):
+            assert url == tp.HOME_URL
+            self.url = url
+            self.binding = True
+
+        def wait_for_timeout(self, ms):
+            assert ms >= 2000
+
+    page = RedirectPage()
+    monkeypatch.setattr(tp, "_needs_phone_binding", lambda p: p.binding)
+    assert not tp._backend_authenticated(page)
+    assert page.binding
+
+
 def test_whoami_prints_single_json_line(monkeypatch, capsys):
     monkeypatch.setattr(tp, "_probe_identity",
                         lambda *a, **k: {"loggedIn": True, "name": "我的头条号", "avatar": ""})
