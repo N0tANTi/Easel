@@ -43,6 +43,14 @@ In a second PowerShell window, set the same local `PATH` and `PYTHONUTF8` values
 
 Check that both services listen on `127.0.0.1`, that the model self-test succeeds, and that the correct account identity appears after each platform login. The model self-test checks the API; `ping` also checks an Agent response. Do not infer that a platform post succeeded from an Easel button alone: verify the resulting post or draft on the platform itself.
 
+## Reviewed batch submission and verification
+
+Keep the Web default at `EASEL_PUBLISH_MODE=manual` for the brand pilot. For a named batch the user has already reviewed and approved, confirm the account identity, final title/body/media, photo rights, and intended platform for each item. Run the platform runner without `--exec` first to inspect its plan. Submit one item at a time through the existing runner and immediately check the platform's own published content list or article page; save its public URL/ID in a dated history entry. Xiaohongshu's success screen alone is weaker evidence than its published note manager. Toutiao's API receipt should also be matched to its creator content list.
+
+If a runner reports a timeout or `Failed to fetch` after clicking publish, treat the result as unknown. Check the platform's published list and draft editor before another submission. For an intact draft, resume that same draft rather than creating a new item. The first batch's Zhihu article required this recovery; see [history](../history/2026-11-03-brand-pilot-publishing.md). Platforms may alter the display title; compare the public page and record any change.
+
+Before a larger or unattended workflow, agree on cadence, platform scope, review point, and failure handling, then consider changing the Web publishing mode. Removing a live post is a platform-side correction, not a full rollback of exposure: preserve the URL and reason in history, use the official editor or deletion controls, and verify the final public state. Never copy session data, cookies, private images, or credentials into Git.
+
 ## Recovery
 
 - If Chromium login is unavailable, rerun `.\.venv\Scripts\python.exe -m playwright install chromium`, launch a headless Chromium smoke test, and rerun `doctor`.
