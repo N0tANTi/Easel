@@ -710,7 +710,7 @@ def _probe_identity(headed: bool = False) -> dict:
 
 def _read_display_name(page) -> str:
     """尽力读头条号昵称；读不到返回空串（不阻断 whoami）。"""
-    for sel in ("[class*='user-name']", "[class*='userName']", "[class*='nickname']",
+    for sel in ("[class*='user-panel']", "[class*='user-name']", "[class*='userName']", "[class*='nickname']",
                 "[class*='user-info'] span", "[class*='avatar'] + *"):
         try:
             el = page.locator(sel).first
