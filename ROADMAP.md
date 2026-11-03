@@ -1,0 +1,6 @@
+# Roadmap
+
+1. **P1 — Establish the brand profile.** Obtain the brand name or website, products, audience, approved claims and evidence, tone, and prohibited claims. Create one shared profile and verify it with the brand owner before drafting channel content. Acceptance: the profile matches supplied source material and contains no invented product claims.
+2. **P1 — Connect the three channels.** The account owner scans the QR codes for 微信公众号、小红书、知乎 in the local Easel UI and completes any phone confirmation. Verify each channel's displayed identity and logged-in state. Dependency: the owner has admin or publishing access. Do not export or commit cookies.
+3. **P1 — Pilot human-reviewed content.** Draft one topic in three platform-specific forms, check facts and media rights, use the manual publishing path, and confirm the actual platform URLs after the owner submits. Dependency: tasks 1 and 2 for account-based analytics; manual export can be tested before login. Acceptance: approved drafts, correct platform formatting, and platform-side publication evidence.
+4. **P2 — Review automation readiness.** Evaluate platform login stability, content accuracy, audit trail, and account risk before enabling automatic submission. Keep `EASEL_PUBLISH_MODE=manual` until this review is complete.
