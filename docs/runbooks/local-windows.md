@@ -55,6 +55,8 @@ Before a larger or unattended workflow, agree on cadence, platform scope, review
 
 For the explicitly approved second batch, the Codex heartbeat `Easel 第二批间隔发布` uses ignored `outputs/_release_schedule_2026-11-03.json` as its release ledger. Each 15-minute run handles at most one due `scheduled` item. Before submission, check the account's current identity and dry-run the appropriate publisher; after submission, independently check the platform creator list or public page. Update both the ledger and review manifest only after that readback. A submitted Xiaohongshu item shown as `审核中` belongs in the ledger's `under_review` list and must not be retried. On an ambiguous submission or expired login, set `needs_reconciliation`, stop that run, and request human intervention. The heartbeat is a Codex app automation on this workstation; Easel's scheduler skill supplies queue logic but does not itself publish or wake the machine. Keep the workstation and relevant local services available during the window. Stop the heartbeat when the batch is complete. The Web default remains manual.
 
+When a Zhihu version is published as text only, read the final title and body without opening its source media. Replace references to absent photos, figures, or visual examples with concrete descriptions of colors, garments, and their relationships. A generic point that a photo cannot prove comfort is acceptable, but a specific claim such as “this photo shows” needs an actual attached image or a self-contained text explanation. Apply this check before the publisher dry-run.
+
 ## Recovery
 
 - If Chromium login is unavailable, rerun `.\.venv\Scripts\python.exe -m playwright install chromium`, launch a headless Chromium smoke test, and rerun `doctor`.
