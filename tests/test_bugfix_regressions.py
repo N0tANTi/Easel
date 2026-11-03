@@ -37,6 +37,45 @@ def _load(name: str, path: Path):
     return mod
 
 
+def test_douyin_image_upload_uses_image_input_when_video_input_is_first():
+    """Creator upload keeps a single-file video input before the multi-image input."""
+    mod = _load("douyin_upload_regression", SHARED / "douyin_publish.py")
+
+    class Input:
+        def __init__(self, accept, multiple):
+            self.accept = accept
+            self.multiple = multiple
+            self.files = None
+
+        def get_attribute(self, name):
+            return self.accept if name == "accept" else ("" if self.multiple else None)
+
+        def set_input_files(self, files):
+            if len(files) > 1 and not self.multiple:
+                raise ValueError("non-multiple file input")
+            self.files = files
+
+    class Page:
+        def __init__(self):
+            self.video = Input("video/mp4,video/*", False)
+            self.image = Input("image/png,image/jpeg", True)
+
+        def query_selector_all(self, selector):
+            assert selector == 'input[type="file"]'
+            return [self.video, self.image]
+
+        def wait_for_timeout(self, ms):
+            assert ms == 1000
+
+    page = Page()
+    mod._upload_files(page, ["first.jpg", "second.jpg"], "imagetext")
+    assert page.image.files == ["first.jpg", "second.jpg"]
+    assert page.video.files is None
+    mod._upload_files(page, ["clip.mp4"], "video")
+    assert page.video.files == ["clip.mp4"]
+    assert "douyin" not in web.VIDEO_ONLY_PUBLISH
+
+
 # ── web/app.py：_read_job_events 单行损坏不应丢弃整个事件流 ───────────
 def test_read_job_events_skips_torn_lines(tmp_path, monkeypatch):
     monkeypatch.setattr(web, "SESSIONS_DIR", tmp_path / "sessions")

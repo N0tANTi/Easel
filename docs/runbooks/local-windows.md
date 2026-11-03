@@ -49,6 +49,8 @@ Keep the Web default at `EASEL_PUBLISH_MODE=manual` for the brand pilot. For a n
 
 If a runner reports a timeout or `Failed to fetch` after clicking publish, treat the result as unknown. Check the platform's published list and draft editor before another submission. For an intact draft, resume that same draft rather than creating a new item. The first batch's Zhihu article required this recovery; see [history](../history/2026-11-03-brand-pilot-publishing.md). Platforms may alter the display title; compare the public page and record any change.
 
+For Douyin image/text, use its `publish --images` route and require creator work-list readback with the new work ID and `published` status. The upload page contains both a video input and a multi-image input; choose by accepted media type. This account required a fresh SMS code per item in the first batch. Have the account owner enter it into a local one-time prompt or form; never put the code in CLI arguments, logs, Git, or durable records. If readback does not find the work, inspect creator management before retrying.
+
 Before a larger or unattended workflow, agree on cadence, platform scope, review point, and failure handling, then consider changing the Web publishing mode. Removing a live post is a platform-side correction, not a full rollback of exposure: preserve the URL and reason in history, use the official editor or deletion controls, and verify the final public state. Never copy session data, cookies, private images, or credentials into Git.
 
 ## Recovery

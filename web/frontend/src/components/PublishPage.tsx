@@ -16,7 +16,7 @@ interface PublishPageProps {
 // draft: true = 该平台支持「存草稿」（落后台草稿箱，不公开发布）
 const PLATFORMS: { key: string; label: string; titleLimit?: number; bodyLimit: number; hint: string; draft?: boolean }[] = [
   { key: 'xiaohongshu', label: '小红书', titleLimit: 20, bodyLimit: 1000, hint: '标题≤20，正文≤1000，重情绪+话题标签' },
-  { key: 'douyin', label: '抖音', titleLimit: 55, bodyLimit: 55, hint: '文案≤55，前几字是钩子' },
+  { key: 'douyin', label: '抖音', titleLimit: 30, bodyLimit: 1000, hint: '支持图文或视频，标题≤30，需附媒体' },
   { key: 'kuaishou', label: '快手', titleLimit: 30, bodyLimit: 1000, hint: '视频或图片(图文)，标题≤30，需附媒体' },
   { key: 'weixin-channels', label: '视频号', bodyLimit: 1000, hint: '需附视频，短描述+话题标签，微信扫码登录' },
   { key: 'zhihu', label: '知乎', bodyLimit: 5000, hint: '长文/回答，讲清逻辑' },
@@ -32,8 +32,8 @@ const LABEL2KEY = Object.fromEntries(PLATFORMS.map((p) => [p.label, p.key]));
 const PUBLISHABLE = new Set(['xiaohongshu', 'douyin', 'kuaishou', 'weixin-channels', 'zhihu', 'juejin', 'bilibili', 'wechat-oa', 'twitter-x', 'toutiao']);
 // 必须附带媒体的平台（无媒体发不了）——公众号需要一张封面图，也计入；X 纯文字推文合法，不计入
 const MEDIA_REQUIRED = new Set(['xiaohongshu', 'douyin', 'kuaishou', 'weixin-channels', 'bilibili', 'wechat-oa']);
-// 只能发视频的平台（抖音/视频号/B站：图文不走此链路，必须视频）
-const VIDEO_ONLY = new Set(['douyin', 'weixin-channels', 'bilibili']);
+// 当前发布器只能发视频的平台（抖音底层已支持图文）
+const VIDEO_ONLY = new Set(['weixin-channels', 'bilibili']);
 const VIDEO_RE = /\.(mp4|mov|webm|mkv|avi|m4v|flv|ts)$/i;
 
 function parseSections(text: string): Record<string, string> {

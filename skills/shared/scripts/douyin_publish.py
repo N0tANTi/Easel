@@ -321,11 +321,17 @@ def _switch_tab(page, kind: str):
     page.wait_for_timeout(400)
 
 
-def _upload_files(page, paths: list[str]):
-    """隐藏 file input 塞文件（比拦截 filechooser 稳）。REF _clickAndChooseFile。"""
-    fi = page.query_selector(SELECTORS["file_input"]) or page.query_selector(SELECTORS["file_input_fallback"])
+def _upload_files(page, paths: list[str], kind: str):
+    """Pick the active media input; the upload page keeps video and image inputs in the DOM."""
+    wanted = "video" if kind == "video" else "image"
+    inputs = page.query_selector_all('input[type="file"]')
+    fi = next((el for el in inputs if wanted in (el.get_attribute("accept") or "").lower()), None)
+    if fi is None and kind != "video":
+        fi = next((el for el in inputs if el.get_attribute("multiple") is not None), None)
+    if fi is None and kind == "video":
+        fi = next((el for el in inputs if el.get_attribute("multiple") is None), None)
     if not fi:
-        _die("未找到上传 file input（检查 SELECTORS.file_input）")
+        _die(f"未找到{wanted}上传 file input（检查当前发布 tab）")
     fi.set_input_files(paths)
     page.wait_for_timeout(1000)
 
@@ -819,7 +825,7 @@ def _sms_fill_and_submit(page, code: str) -> bool:
             page.wait_for_timeout(300)
         except Exception:
             pass
-    print(f"   验证码已填入（框内值={inp.input_value() if _safe(inp) else '?'}）", file=sys.stderr)
+    print("   验证码已填入（内容不记录）", file=sys.stderr)
     page.wait_for_timeout(700)             # 等「验证」按钮由填满激活
     # 提交：点弹窗内「验证」（Playwright 原生 click 可信），回车兜底。
     # ⚠️ 不再用 `if _logged_in(page): return` 短路——发布页顶部恒有「高清发布」按钮，
@@ -1217,7 +1223,7 @@ def _publish(a, kind: str) -> int:
             _go_upload(page)
             human_pace.pace("task-switch")               # 进编辑器的自然停顿
             _switch_tab(page, "video" if kind == "video" else "imagetext")
-            _upload_files(page, media)
+            _upload_files(page, media, kind)
             human_pace.pace("field-switch")              # 上传后到填写前
             if kind == "video":
                 _wait_video_processed(page)

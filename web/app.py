@@ -5017,7 +5017,7 @@ async def _fetch_analytics(platform: str):
 
 
 MEDIA_REQUIRED = {"xiaohongshu", "douyin", "kuaishou", "weixin-channels", "bilibili"}
-VIDEO_ONLY_PUBLISH = {"douyin", "weixin-channels", "bilibili"}   # 只能发视频的平台
+VIDEO_ONLY_PUBLISH = {"weixin-channels", "bilibili"}   # 当前发布器只能发视频的平台
 
 
 class PublishRequest(BaseModel):
