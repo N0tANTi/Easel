@@ -59,6 +59,8 @@ When a Zhihu version is published as text only, read the final title and body wi
 
 For a Zhihu submission that remains at `/edit`, inspect the existing draft and the public article URL before any further click. The publishing API may return HTTP 200 with a non-success JSON `code`; code `2011` was observed on 2026-11-03 with a 24-hour frequency-limit message. Preserve the same draft, set a retry time after the cooldown, and do not create another draft or click repeatedly. The next Zhihu item should wait until the previous one is verified public.
 
+After the second-batch Xiaohongshu and Toutiao lanes were fully confirmed on 2026-11-03, the heartbeat was reduced from 15-minute runs to hourly Zhihu-only checks. Its ledger still controls the due time; the shorter historical cadence does not authorize more submissions. Third-batch `pending` review items are outside this automation.
+
 ## Recovery
 
 - If Chromium login is unavailable, rerun `.\.venv\Scripts\python.exe -m playwright install chromium`, launch a headless Chromium smoke test, and rerun `doctor`.
