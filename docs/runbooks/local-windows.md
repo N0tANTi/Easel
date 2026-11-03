@@ -57,6 +57,8 @@ For the explicitly approved second batch, the Codex heartbeat `Easel 第二批�
 
 When a Zhihu version is published as text only, read the final title and body without opening its source media. Replace references to absent photos, figures, or visual examples with concrete descriptions of colors, garments, and their relationships. A generic point that a photo cannot prove comfort is acceptable, but a specific claim such as “this photo shows” needs an actual attached image or a self-contained text explanation. Apply this check before the publisher dry-run.
 
+For a Zhihu submission that remains at `/edit`, inspect the existing draft and the public article URL before any further click. The publishing API may return HTTP 200 with a non-success JSON `code`; code `2011` was observed on 2026-11-03 with a 24-hour frequency-limit message. Preserve the same draft, set a retry time after the cooldown, and do not create another draft or click repeatedly. The next Zhihu item should wait until the previous one is verified public.
+
 ## Recovery
 
 - If Chromium login is unavailable, rerun `.\.venv\Scripts\python.exe -m playwright install chromium`, launch a headless Chromium smoke test, and rerun `doctor`.
