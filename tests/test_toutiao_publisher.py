@@ -197,6 +197,29 @@ def test_login_subcommand_defaults_to_outputs_login_dir(monkeypatch):
     assert captured["status_file"].parent.name == "_login"
 
 
+def test_phone_binding_is_not_a_completed_login():
+    """扫码后手机号绑定页位于头条域名，也不能放行发布。"""
+    class Visible:
+        def is_visible(self):
+            return True
+
+    class BindingPage:
+        url = "https://mp.toutiao.com/profile/v4/index"
+        frames = []
+
+        def get_by_text(self, text, exact=False):
+            assert text == "手机绑定" and exact
+            return type("Locator", (), {"first": Visible()})()
+
+        def locator(self, selector):
+            assert "placeholder" in selector
+            return type("Locator", (), {"first": Visible()})()
+
+    page = BindingPage()
+    assert tp._needs_phone_binding(page)
+    assert not tp._is_logged_in(page)
+
+
 def test_whoami_prints_single_json_line(monkeypatch, capsys):
     monkeypatch.setattr(tp, "_probe_identity",
                         lambda *a, **k: {"loggedIn": True, "name": "我的头条号", "avatar": ""})
