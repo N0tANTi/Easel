@@ -53,6 +53,8 @@ For Douyin image/text, use its `publish --images` route and require creator work
 
 Before a larger or unattended workflow, agree on cadence, platform scope, review point, and failure handling, then consider changing the Web publishing mode. Removing a live post is a platform-side correction, not a full rollback of exposure: preserve the URL and reason in history, use the official editor or deletion controls, and verify the final public state. Never copy session data, cookies, private images, or credentials into Git.
 
+For the explicitly approved second batch, the Codex heartbeat `Easel 第二批间隔发布` uses ignored `outputs/_release_schedule_2026-11-03.json` as its release ledger. Each 15-minute run handles at most one due `scheduled` item. Before submission, check the account's current identity and dry-run the appropriate publisher; after submission, independently check the platform creator list or public page. Update both the ledger and review manifest only after that readback. A submitted Xiaohongshu item shown as `审核中` belongs in the ledger's `under_review` list and must not be retried. On an ambiguous submission or expired login, set `needs_reconciliation`, stop that run, and request human intervention. The heartbeat is a Codex app automation on this workstation; Easel's scheduler skill supplies queue logic but does not itself publish or wake the machine. Keep the workstation and relevant local services available during the window. Stop the heartbeat when the batch is complete. The Web default remains manual.
+
 ## Recovery
 
 - If Chromium login is unavailable, rerun `.\.venv\Scripts\python.exe -m playwright install chromium`, launch a headless Chromium smoke test, and rerun `doctor`.
