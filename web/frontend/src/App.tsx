@@ -4,6 +4,7 @@ import type { Page } from './components/Sidebar';
 import ChatPage from './components/ChatPage';
 import SkillPage from './components/SkillPage';
 import OutputsPage from './components/OutputsPage';
+import ReviewPage from './components/ReviewPage';
 import AccountsPage from './components/AccountsPage';
 import ProfilePage from './components/ProfilePage';
 import DashboardPage from './components/DashboardPage';
@@ -787,6 +788,8 @@ export default function App() {
         return <SkillPage persona={selectedPersona} />;
       case 'outputs':
         return <OutputsPage jumpPath={outputsJump} onJumpHandled={clearOutputsJump} />;
+      case 'review':
+        return <ReviewPage />;
       case 'accounts':
         return <AccountsPage />;
       case 'profile':

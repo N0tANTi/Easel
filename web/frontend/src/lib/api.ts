@@ -386,6 +386,30 @@ export function fetchOutputs(): Promise<OutputNode[]> {
   return request<OutputNode[]>('/api/outputs');
 }
 
+export interface ReviewItem {
+  id: string;
+  brand: string;
+  topic: string;
+  platform: 'xiaohongshu' | 'toutiao' | 'zhihu' | 'weibo';
+  title: string;
+  body: string;
+  media: string[];
+  status: 'pending' | 'approved' | 'published';
+  published_url: string;
+  source: string;
+}
+
+export function fetchReviewItems(): Promise<ReviewItem[]> {
+  return request<ReviewItem[]>('/api/review');
+}
+
+export function updateReviewItem(id: string, status: ReviewItem['status'], confirmed = false, publishedUrl = ''): Promise<{ ok: boolean }> {
+  return request(`/api/review/${encodeURIComponent(id)}`, {
+    method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status, confirmed, published_url: publishedUrl }),
+  });
+}
+
 export function fetchArtifactArchive(path: string, signal?: AbortSignal): Promise<{ paths: string[] }> {
   return request<{ paths: string[] }>(`/api/artifacts/archive?path=${encodeURIComponent(path)}`, { signal });
 }

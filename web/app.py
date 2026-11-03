@@ -49,6 +49,7 @@ from easel.persona import (load_profile_text, persona_prefix, chat_turn_message,
                            profile_exists, valid_persona_name, _FILE_ORDER)
 from easel.timeouts import TIMEOUT_CHAT, TIMEOUT_DIRECT, TIMEOUT_PRODUCE
 from easel.manual_publish import build_package, publishing_mode
+from easel.review_queue import list_items as list_review_items, update_status as update_review_status
 from easel.direct_api import (DirectAPIError, SYSTEM_PROMPT, api_config, api_mode,
                               history_path, read_settings, stream_chat)
 from easel import harnesses
@@ -1276,6 +1277,32 @@ def get_output_tree() -> list[dict]:
         items.append(node)
     # 按最后修改时间倒序：最近产物排最前（供工作台「最近产物」与内容库时间排序）
     return sorted(items, key=lambda x: x.get('mtime', 0), reverse=True)
+
+
+class ReviewStatusRequest(BaseModel):
+    status: str
+    confirmed: bool = False
+    published_url: str = ''
+
+
+@app.get('/api/review')
+async def api_review_list(include_published: bool = False):
+    """Pending platform drafts declared by local outputs/**/review.json manifests."""
+    return list_review_items(OUTPUTS_DIR, include_published=include_published)
+
+
+@app.patch('/api/review/{item_id}')
+async def api_review_update(item_id: str, req: ReviewStatusRequest):
+    if not re.fullmatch(r'[0-9a-f]{20}', item_id):
+        raise HTTPException(400, '无效审核条目')
+    try:
+        updated = update_review_status(OUTPUTS_DIR, item_id, req.status,
+                                       confirmed=req.confirmed, published_url=req.published_url)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    if not updated:
+        raise HTTPException(404, '审核条目不存在')
+    return {'ok': True}
 
 
 def _safe_output_path(rel: str) -> Path:
