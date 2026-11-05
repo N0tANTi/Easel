@@ -1,0 +1,9 @@
+# Toutiao-only scheduling and native schedule incident — 2026-11-04
+
+The user limited future publication to 今日头条 and paused all other accounts. Four existing brand and fabric knowledge Toutiao variants were approved locally. Their source copy, images, review states, and release ledger remain in ignored `outputs/`; no private media or credentials were committed.
+
+The first article's editor showed the intended title, body, and two unique images. Its native `定时发布` dialog displayed 2026-11-06 10:30 Beijing. After confirmation, the platform returned article ID `7704529695164908072`, but the independent creator content list immediately displayed the article as `已发布` at 2026-11-04 19:50 Los Angeles. This is an observed mismatch; the cause in the platform/editor flow is unverified. The article was recorded as published, and further native scheduling was stopped. A prior draft-save trial had no independently verified draft and the creator draft list was empty; there was no second publish click for that trial.
+
+The remaining three approved Toutiao articles were assigned November 5, 6, and 7 at 18:30 Los Angeles time (the following mornings at 10:30 Beijing) in `outputs/_toutiao_schedule_2026-11-04.json`. A renamed Codex heartbeat now checks that ledger every 15 minutes, uses the existing Toutiao publisher only after dry-run and identity checks, and requires creator-list readback. It refuses automatic late delivery after 45 minutes and never retries an uncertain submission. The prior multi-platform heartbeat scope was replaced; paused platforms are excluded. The local Web mode remains `manual`.
+
+Next: verify each scheduled result in the creator content list, record the article URL/status, and stop the automation when the approved batch is resolved. Investigate native schedule behavior separately before using it again.

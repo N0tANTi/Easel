@@ -1,6 +1,6 @@
 # Current state
 
-Verified on 2026-11-03 (America/Los_Angeles).
+Verified on 2026-11-04 (America/Los_Angeles). The dated update below supersedes earlier publication and automation status in this file.
 
 - The Windows checkout is at `D:\anti\codexprogram\geo\Easel`. `origin` is the public fork [N0tANTi/Easel](https://github.com/N0tANTi/Easel); `upstream` is [ZJU-REAL/Easel](https://github.com/ZJU-REAL/Easel). The fork includes the DOMPurify 3.4.17 update and this pilot's publishing records.
 - Python dependencies are in `.venv/`; OpenClaw 2026.10.10 and FFmpeg 9.0.2 program files are in ignored `.local/`. Playwright Chromium was installed and launched successfully. OpenClaw runtime configuration is under the current user's `.openclaw-easel/`.
@@ -19,3 +19,11 @@ Verified on 2026-11-03 (America/Los_Angeles).
 - By 2026-11-03 03:19 PST, all five scheduled Xiaohongshu items and all five scheduled Toutiao items in the second-batch ledger were confirmed `已发布` in their creator centers. The first Xiaohongshu review submission and the first Zhihu/Toutiao items were separately confirmed earlier. Only three second-batch Zhihu items remain: one preserved draft waiting for its platform cooldown and two later scheduled text articles. The Codex heartbeat was narrowed to Zhihu and changed to hourly; no third-batch item was included.
 
 See [the local Windows runbook](docs/runbooks/local-windows.md) for startup, batch submission, and verification, and [the review queue runbook](docs/runbooks/review-queue.md) for draft manifests and status transitions. Keep automatic Web submission disabled until a concrete ongoing workflow is approved; verify each platform-side publication independently.
+
+## 2026-11-04 publication scope
+
+- The user narrowed publication to **今日头条 only**. Xiaohongshu, Zhihu, Douyin, Weibo, and other accounts are paused; earlier Zhihu cooldown dates and third-batch plans do not authorize posting. The Web mode remains `manual`.
+- A separate, user-approved four-topic brand and fabric knowledge batch has four Toutiao variants in ignored `outputs/brand-fabric-knowledge-2026-11-03/`. Its only active release ledger is ignored `outputs/_toutiao_schedule_2026-11-04.json`; other platform variants remain pending.
+- The first Toutiao article, “中大童衣服怎么挑？先按场景、动作和衣橱分三步看”, is confirmed `已发布` in the creator content list with article ID `7704529695164908072`. Although the native schedule dialog showed 2026-11-06 10:30 Beijing, the creator list showed immediate publication on 2026-11-04 19:50 Los Angeles. No further native schedule submissions were made.
+- The remaining three Toutiao articles are locally scheduled for November 5, 6, and 7 at 18:30 Los Angeles time (November 6, 7, and 8 at 10:30 Beijing). The Codex automation `Easel 今日头条定时发送（其他平台暂停）` checks every 15 minutes and may submit at most one due article per run after identity, copy, media, and dry-run checks. A creator-list readback is required before marking `published`; ambiguous results stop the lane without retry. A missed window exceeding 45 minutes requires manual rescheduling. The workstation and local services must be available.
+- The earlier multi-platform heartbeat was replaced by this Toutiao-only scope. See [the incident and schedule history](docs/history/2026-11-04-toutiao-scheduling.md) and [the local runbook](docs/runbooks/local-windows.md). No new code or private copy was added to Git.
