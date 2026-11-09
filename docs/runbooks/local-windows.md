@@ -69,6 +69,8 @@ The first article in this batch appeared immediately in Toutiao's `已发布` li
 
 The November 6–7 windows were missed and the old daily automation was deleted. On November 8 the user authorized recovery and approximately 30-minute spacing. The first recovered article was verified published. Four assistant-reviewed Toutiao-only items were added to the same ignored ledger. The active heartbeat is `easel-30` (`Easel 今日头条每30分钟发布`); it checks the ledger every 30 minutes, with a 45-minute maximum delay after each due time. At most one item may be submitted per run. The user can close the app, but local timed delivery then cannot be relied on; if the window is missed, leave it blocked for a new instruction. Remove the heartbeat when every authorized Toutiao item is confirmed published or has a final blocked outcome. The latest `due_at` values and statuses are in the ledger, not this runbook.
 
+At a due run, probe loopback Web and Gateway first. If stopped, use the start and recovery commands above, launch background processes with `-WindowStyle Hidden`, then verify both services and forced Toutiao identity before dry-run or submit. Gateway startup can exceed the current 20-second check in `gateway.ps1`; a timeout is not evidence the service remained down, so inspect its health endpoint before retrying startup. Codex app availability is separate: a local heartbeat cannot launch itself while the desktop app is closed.
+
 ## Recovery
 
 
