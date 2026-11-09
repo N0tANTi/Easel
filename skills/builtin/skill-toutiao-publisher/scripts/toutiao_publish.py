@@ -464,17 +464,26 @@ def _write_receipt(url: str, status: int, payload: object) -> dict | None:
 
 
 def _observe_receipts(page, mode: str) -> dict:
-    receipt = {'mode': mode, 'active': False, 'outcome': 'unknown'}
+    receipt = {'mode': mode, 'active': False, 'outcome': 'unknown', 'responses': []}
     def receive(response):
         if not receipt['active'] or receipt['outcome'] == 'accepted':
             return
         try:
             if response.request.method != 'POST':
                 return
-            started = response.request.timing.get('startTime', -1)
-            if started < receipt.get('after', 0):
+            from urllib.parse import urlsplit
+            parsed = urlsplit(response.url)
+            if parsed.hostname != 'mp.toutiao.com':
                 return
-            result = _write_receipt(response.url, response.status, response.json())
+            payload = response.json()
+            if len(receipt['responses']) < 12:
+                receipt['responses'].append({
+                    'path': parsed.path,
+                    'status': response.status,
+                    'code': payload.get('code') if isinstance(payload, dict) else None,
+                    'message': str(payload.get('message', ''))[:120] if isinstance(payload, dict) else '',
+                })
+            result = _write_receipt(response.url, response.status, payload)
             if result is not None and result['mode'] == mode:
                 receipt.update(result)
         except Exception:
@@ -809,7 +818,15 @@ def publish_article(content: str, title: str, tags: list[str], cover: Path | Non
                 return result
             result["published"] = _wait_receipt(page, receipt, timeout_ms)
             if not result['published']:
-                result['error'] = '发布结果未核实，请到平台后台核对，先别重发。'
+                result['error'] = ('平台拒绝投稿，请核对后台与返回信息，先别重发。'
+                                   if receipt['outcome'] == 'rejected'
+                                   else '发布结果未核实，请到平台后台核对，先别重发。')
+                result['submit_outcome'] = receipt['outcome']
+                result['submit_responses'] = receipt['responses']
+                try:
+                    result['visible_buttons'] = page.locator('button:visible').all_inner_texts()[-20:]
+                except Exception:
+                    pass
             else:
                 result['article_id'] = receipt['id']
             result["url"] = page.url

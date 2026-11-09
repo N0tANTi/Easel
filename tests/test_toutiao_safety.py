@@ -38,6 +38,24 @@ def test_receipt_requires_matching_write_and_id(mode,endpoint):
     assert tp._write_receipt(url.replace('mp.toutiao.com','evil.example'),200,{'code':0,'data':{'article_id':'123'}}) is None
 
 
+def test_publish_receipt_observer_records_platform_response_without_request_timing():
+    handlers = {}
+    page = SimpleNamespace(on=lambda event, fn: handlers.__setitem__(event, fn))
+    receipt = tp._observe_receipts(page, 'publish')
+    receipt['active'] = True
+    response = SimpleNamespace(
+        request=SimpleNamespace(method='POST'),
+        url='https://mp.toutiao.com/mp/agw/article/publish/',
+        status=200,
+        json=lambda: {'code': 0, 'message': 'success', 'data': {'article_id': '123'}},
+    )
+    handlers['response'](response)
+    assert receipt['outcome'] == 'accepted'
+    assert receipt['id'] == '123'
+    assert receipt['responses'] == [
+        {'path': '/mp/agw/article/publish/', 'status': 200, 'code': 0, 'message': 'success'}]
+
+
 def test_saving_activity_does_not_confirm_saved_draft(monkeypatch):
     clock=[0.0]
     monkeypatch.setattr(tp,'time',SimpleNamespace(time=lambda:clock[0]))
