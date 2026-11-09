@@ -71,6 +71,8 @@ The November 6–7 windows were missed and the old daily automation was deleted.
 
 At a due run, probe loopback Web and Gateway first. If stopped, use the start and recovery commands above, launch background processes with `-WindowStyle Hidden`, then verify both services and forced Toutiao identity before dry-run or submit. Gateway startup can exceed the current 20-second check in `gateway.ps1`; a timeout is not evidence the service remained down, so inspect its health endpoint before retrying startup. Codex app availability is separate: a local heartbeat cannot launch itself while the desktop app is closed.
 
+For Python HTTP health checks against `127.0.0.1`, use `urllib.request.build_opener(urllib.request.ProxyHandler({}))`: proxy environment variables otherwise produced a 502 while Web was unreachable and obscured the actual loopback state. If a submit attempt returns no verifiable article ID, check Toutiao's all-content and draft lists; keep the ledger and heartbeat paused until the outcome is reconciled. Do not infer that an absent title is permission to retry.
+
 ## Recovery
 
 
